@@ -3,11 +3,14 @@ package com.portfolio.service;
 import com.portfolio.domain.dto.DocumentResponseDto;
 import com.portfolio.domain.dto.DocumentSearchResultDto;
 import com.portfolio.domain.dto.QueryResponseDto;
-import com.portfolio.repository.InMemoryDocumentStore;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.document.Document;
+import org.springframework.ai.vectorstore.SearchRequest;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -18,20 +21,77 @@ import java.util.stream.IntStream;
 @Service
 public class RagService {
 
-    private final InMemoryDocumentStore vectorStore;
+    private final VectorStore vectorStore;
     private final ChatService chatService;
 
-    public RagService(InMemoryDocumentStore vectorStore, ChatService chatService) {
+    public RagService(VectorStore vectorStore, ChatService chatService) {
         this.vectorStore = vectorStore;
         this.chatService = chatService;
     }
 
     /**
-     * 질문과 유사한 문서 청크를 벡터 스토어에서 검색
+     * 질문과 유사한 문서 청크를 벡터 DB에서 검색
      */
     public List<DocumentSearchResultDto> retrieve(String question, int maxResults) {
         log.debug("검색 시작: '{}', 최대 결과 수: {}", question, maxResults);
-        return vectorStore.similaritySearch(question, maxResults);
+
+        List<Document> documents = vectorStore.similaritySearch(
+                SearchRequest.builder()
+                        .query(question)
+                        .topK(maxResults)
+                        .build()
+        );
+
+        if (documents == null || documents.isEmpty()) {
+            log.info("Vector DB 검색 결과 없음: '{}'", question);
+            return List.of();
+        }
+
+        return IntStream.range(0, documents.size())
+                .mapToObj(i -> DocumentSearchResultDto.from(documents.get(i), i))
+                .toList();
+    }
+
+    /**
+     * VectorStore Document를 내부 DTO로 변환
+     */
+    private DocumentSearchResultDto toSearchResultDto(Document document, int index) {
+        Map<String, Object> metadata = document.getMetadata() != null
+                ? document.getMetadata()
+                : Map.of();
+
+        String id = String.valueOf(
+                metadata.getOrDefault("id", "doc-" + index)
+        );
+
+        double score = extractScore(metadata);
+
+        return new DocumentSearchResultDto(
+                id,
+                document.getText(),
+                score,
+                metadata
+        );
+    }
+
+    /**
+     * metadata에 similarity score가 있으면 사용, 없으면 기본값 0.0
+     */
+    private double extractScore(Map<String, Object> metadata) {
+        Object scoreObj = metadata.get("score");
+
+        if (scoreObj instanceof Number number) {
+            return number.doubleValue();
+        }
+
+        if (scoreObj instanceof String str) {
+            try {
+                return Double.parseDouble(str);
+            } catch (NumberFormatException ignored) {
+            }
+        }
+
+        return 0.0;
     }
 
     /**
