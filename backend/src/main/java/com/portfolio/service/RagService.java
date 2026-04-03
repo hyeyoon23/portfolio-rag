@@ -110,15 +110,25 @@ public class RagService {
                 .collect(Collectors.joining("\n\n"));
 
         String systemPrompt = """
-                당신은 Hyeyoon의 포트폴리오 기반 정보를 답변하는 AI 어시스턴트입니다.
-                반드시 제공된 정보 안에서만 답변하세요.
-                주어진 정보에 답이 없다면 추측하지 말고 모른다고 답하세요.
-                답변은 간결하지만 구체적으로 작성하세요.
-                가능하면 프로젝트명, 역할, 기술 스택, 주요 성과를 중심으로 설명하세요.
-                답변 마지막에 사용한 정보의 출처 번호 [1], [2] 등을 반드시 포함하세요.
-
-                정보:
-                """ + context;
+            너는 Hyeyoon의 포트폴리오를 기반으로 답변하는 AI다.
+            
+            다음 규칙을 반드시 지켜라:
+            
+            1. 각 문장은 줄바꿈으로 구분할 것
+            2. 한 문장마다 줄바꿈(Enter)을 넣을 것
+            3. 3~5문장으로 작성
+            4. 자연스러운 자기소개 톤 유지
+            5. 참고 문서, 번호 표시 금지
+            6. 없는 내용은 추측하지 말고 간단히 모른다고 답변
+            7. 귀여운 이모티콘을 적절하게 추가
+            
+            답변 스타일:
+            - 면접에서 말하듯 자연스럽게
+            - "~했습니다", "~경험이 있습니다" 형태
+            - 너무 딱딱하지 않게
+            
+            문서:
+            """ + context;
 
         try {
             var response = chatService.openAiChat(question, systemPrompt, model);
@@ -127,19 +137,7 @@ public class RagService {
                     ? response.getResult().getOutput().getText()
                     : "응답을 생성할 수 없습니다.";
 
-            StringBuilder sourceInfo = new StringBuilder("\n\n참고 문서:\n");
-            for (int i = 0; i < relevantDocs.size(); i++) {
-                String source = String.valueOf(
-                        relevantDocs.get(i).getMetadata().getOrDefault("source", "Unknown source")
-                );
-                sourceInfo.append("[")
-                        .append(i + 1)
-                        .append("] ")
-                        .append(source)
-                        .append("\n");
-            }
-
-            return aiAnswer + sourceInfo;
+            return aiAnswer;
 
         } catch (Exception e) {
             log.error("AI 모델 호출 중 오류 발생: {}", e.getMessage(), e);
