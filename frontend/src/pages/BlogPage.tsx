@@ -1,16 +1,58 @@
 import { Link } from "react-router-dom";
-import { blogPosts } from "../data/blogData";
+import { blogPosts } from "@/data/blogData";
+import BlogHeader from "@/components/BlogHeader";
+import { FaGithub, FaInstagram } from "react-icons/fa";
 
 export default function BlogPage() {
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-16 text-white">
-      <div className="mx-auto max-w-4xl">
+    <main className="min-h-screen bg-(--color-bg) text-(--color-text) transition-colors">
+      <BlogHeader />
+
+      <section className="mx-auto max-w-4xl px-6 py-10 sm:px-8">
+        <div className="mb-15">
+          <p className="text-sm font-medium text-(--color-primary)">
+            Thanks for stopping by.
+          </p>
+
+          <h1 className="mt-3 text-2xl font-bold tracking-tight">
+            Welcome to my blog 🥳
+          </h1>
+
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-(--color-text-muted) sm:text-base">
+            This is where I share my projects, learning notes, and thoughts as a
+            frontend developer.
+          </p>
+
+          <div className="mt-5 flex items-center gap-3">
+            <a
+              href="https://github.com/hyeyoon23"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="GitHub"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-subtle)] transition hover:border-[var(--color-primary-border)] hover:text-[var(--color-text)]"
+            >
+              <FaGithub size={18} strokeWidth={1.8} />
+            </a>
+
+            <a
+              href="https://instagram.com/hyeyoon_23"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Instagram"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-subtle)] transition hover:border-[var(--color-primary-border)] hover:text-[var(--color-text)]"
+            >
+              <FaInstagram size={18} strokeWidth={1.8} />
+            </a>
+          </div>
+        </div>
+
         <div className="mb-10">
-          <Link to="/" className="text-sm text-slate-400 hover:text-white">
-            ← 홈으로
-          </Link>
-          <h1 className="mt-4 text-4xl font-bold">블로그</h1>
-          <p className="mt-3 text-slate-400">
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-1 rounded-full bg-(--color-primary)" />
+            <h2 className="text-2xl font-bold tracking-tight">Blog</h2>
+          </div>
+
+          <p className="mt-3 text-(--color-text-muted)">
             프로젝트, 학습, 개발 기록을 정리하는 공간입니다.
           </p>
         </div>
@@ -20,16 +62,18 @@ export default function BlogPage() {
             <Link
               key={post.id}
               to={`/blog/${post.id}`}
-              className="block rounded-2xl border border-slate-800 bg-slate-900 p-6 transition hover:border-slate-600"
+              className="blog-card block rounded-2xl p-6 transition"
             >
-              <h2 className="text-xl font-semibold">{post.title}</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-400">
+              <h2 className="text-lg font-semibold text-(--color-card-text)">
+                {post.title}
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-(--color-text-muted)">
                 {post.summary}
               </p>
             </Link>
           ))}
         </div>
-      </div>
+      </section>
     </main>
   );
 }

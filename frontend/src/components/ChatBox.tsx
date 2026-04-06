@@ -1,3 +1,4 @@
+import { Loader2, Send } from "lucide-react";
 import { useState } from "react";
 
 interface ChatBoxProps {
@@ -12,6 +13,7 @@ export default function ChatBox({
   initialValue = "",
 }: ChatBoxProps) {
   const [question, setQuestion] = useState(initialValue);
+  const isDisabled = loading || !question.trim();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,18 +42,32 @@ export default function ChatBox({
 
         <button
           type="submit"
-          disabled={loading}
-          className="rounded-2xl px-4 py-2.5 text-sm font-medium transition disabled:cursor-not-allowed"
+          disabled={isDisabled}
+          className="flex items-center justify-center rounded-2xl px-4 py-2.5 text-sm font-medium transition disabled:cursor-not-allowed"
           style={{
-            background: loading
+            background: isDisabled
               ? "var(--color-button-bg-disabled)"
-              : "var(--color-button-bg)",
-            color: loading
+              : "var(--color-primary)",
+            color: isDisabled
               ? "var(--color-button-text-disabled)"
-              : "var(--color-button-text)",
+              : "var(--color-button-text-on-primary)",
+          }}
+          onMouseEnter={(e) => {
+            if (!isDisabled) {
+              e.currentTarget.style.background = "var(--color-primary-hover)";
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!isDisabled) {
+              e.currentTarget.style.background = "var(--color-primary)";
+            }
           }}
         >
-          {loading ? "생성 중..." : "질문하기"}
+          {loading ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Send className="w-4 h-4" />
+          )}
         </button>
       </div>
     </form>

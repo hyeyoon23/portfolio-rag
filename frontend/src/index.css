@@ -23,3 +23,33 @@ body {
 button {
   cursor: pointer;
 }
+
+.blog-card {
+  border: 1px solid var(--color-card-border);
+  background: var(--color-card-bg);
+}
+
+.blog-card:hover {
+  border-color: var(--color-primary-border);
+  background: var(--color-surface-strong);
+  transform: translateY(-2px);
+}
+
+.about-card {
+  border: 1px solid #000;
+  overflow: hidden;
+  text-align: center;
+}
+
+.about-title {
+  padding: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--color-surface);
+  border-bottom: 1px solid #000;
+}
+
+.about-content {
+  padding: 10px;
+  font-size: 13px;
+}

@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
 import ChatBox from "./ChatBox";
 import AnswerCard from "./AnswerCard";
-import type { Message } from "../types/chat";
-import { EXAMPLE_QUESTIONS } from "../constants.ts/chat";
+import type { Message } from "@/types/chat";
+import { EXAMPLE_QUESTIONS } from "@/constants.ts/chat";
 
 interface ChatPanelProps {
   messages: Message[];

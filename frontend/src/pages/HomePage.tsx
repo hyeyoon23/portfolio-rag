@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { askRag } from "../api/rag";
-import type { Message } from "../types/chat";
-import ChatPanel from "../components/ChatPanel";
-import ThemeToggleButton from "../components/ThemeToggleButton";
+import { askRag } from "@/api/rag";
+import type { Message } from "@/types/chat";
+import ChatPanel from "@/components/ChatPanel";
+import ThemeToggleButton from "@/components/ThemeToggleButton";
 
 export default function HomePage() {
   const [messages, setMessages] = useState<Message[]>([
@@ -67,7 +67,7 @@ export default function HomePage() {
 
   return (
     <main className="h-screen overflow-hidden bg-(--color-bg) text-(--color-text) transition-colors">
-      <div className="mx-auto flex h-full max-w-5xl flex-col sm:px-6">
+      <div className="mx-auto flex h-full max-w-4xl flex-col sm:px-6">
         <header className="flex items-center justify-between border-b border-(--color-border) py-3">
           <div />
 

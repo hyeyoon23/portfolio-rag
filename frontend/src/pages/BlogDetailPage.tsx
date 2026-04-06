@@ -1,35 +1,50 @@
 import { Link, useParams } from "react-router-dom";
-import { blogPosts } from "../data/blogData";
+import BlogHeader from "@/components/BlogHeader";
+import { blogPosts } from "@/data/blogData";
 
 export default function BlogDetailPage() {
   const { id } = useParams();
-  const post = blogPosts.find((item) => item.id === Number(id));
+  const post = blogPosts.find((item) => item.id === id);
 
   if (!post) {
     return (
-      <main className="min-h-screen bg-slate-950 px-6 py-16 text-white">
-        <div className="mx-auto max-w-3xl">
-          <Link to="/blog" className="text-sm text-slate-400 hover:text-white">
-            ← 블로그로
+      <main className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+        <BlogHeader />
+        <div className="mx-auto max-w-4xl px-6 py-16">
+          <p>존재하지 않는 게시글입니다.</p>
+          <Link
+            to="/blog"
+            className="mt-4 inline-block text-[var(--color-text-subtle)] hover:text-[var(--color-text)]"
+          >
+            ← 블로그로 돌아가기
           </Link>
-          <p className="mt-6 text-slate-300">존재하지 않는 글입니다.</p>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-16 text-white">
-      <div className="mx-auto max-w-3xl">
-        <Link to="/blog" className="text-sm text-slate-400 hover:text-white">
+    <main className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] transition-colors">
+      <BlogHeader />
+
+      <article className="mx-auto max-w-4xl px-6 py-16">
+        <Link
+          to="/blog"
+          className="text-sm text-[var(--color-text-subtle)] transition hover:text-[var(--color-text)]"
+        >
           ← 블로그로
         </Link>
 
-        <article className="mt-8 rounded-2xl border border-slate-800 bg-slate-900 p-8">
-          <h1 className="text-3xl font-bold">{post.title}</h1>
-          <p className="mt-4 leading-7 text-slate-300">{post.content}</p>
-        </article>
-      </div>
+        <h1 className="mt-6 text-4xl font-bold tracking-tight">{post.title}</h1>
+
+        <p className="mt-4 text-[var(--color-text-muted)]">{post.summary}</p>
+
+        <div className="prose mt-10 max-w-none">
+          <div className="answer-text whitespace-pre-wrap leading-8">
+            {post.content}
+          </div>
+        </div>
+      </article>
     </main>
   );
 }
