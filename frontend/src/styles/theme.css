@@ -1,0 +1,109 @@
+:root {
+  --color-bg: #f8fafc;
+  --color-surface: rgba(255, 255, 255, 0.72);
+  --color-surface-strong: #ffffff;
+  --color-border: rgba(15, 23, 42, 0.08);
+
+  --color-text: #0f172a;
+  --color-text-muted: #475569;
+  --color-text-subtle: #64748b;
+
+  --color-primary: #2563eb;
+  --color-primary-soft: rgba(37, 99, 235, 0.1);
+  --color-primary-border: rgba(37, 99, 235, 0.18);
+
+  --color-accent: #9333ea;
+
+  --gradient-hero: linear-gradient(to right, #3b82f6, #a855f7);
+
+  --shadow-panel: 0 25px 50px -12px rgba(15, 23, 42, 0.12);
+
+  --color-card-bg: rgba(255, 255, 255, 0.88);
+  --color-card-border: rgba(15, 23, 42, 0.08);
+  --color-card-text: #0f172a;
+
+  --color-divider-soft: rgba(15, 23, 42, 0.06);
+
+  --color-chip-bg: rgba(15, 23, 42, 0.03);
+  --color-chip-border: rgba(15, 23, 42, 0.08);
+  --color-chip-text: #475569;
+  --color-chip-bg-hover: rgba(15, 23, 42, 0.06);
+  --color-chip-border-hover: rgba(15, 23, 42, 0.14);
+  --color-chip-text-hover: #0f172a;
+
+  --color-danger-soft: rgba(239, 68, 68, 0.1);
+  --color-danger-border: rgba(239, 68, 68, 0.2);
+  --color-danger-text: #dc2626;
+
+  --gradient-user-bubble: linear-gradient(to right, #2563eb, #9333ea);
+  --color-user-bubble-text: #ffffff;
+  --shadow-user-bubble: 0 10px 30px rgba(59, 130, 246, 0.15);
+
+  --color-input-bg: #ffffff;
+  --color-input-border: rgba(15, 23, 42, 0.12);
+  --color-input-border-focus: rgba(59, 130, 246, 0.55);
+  --color-input-text: #0f172a;
+  --color-input-placeholder: #94a3b8;
+  --color-input-ring: rgba(59, 130, 246, 0.18);
+
+  --color-button-bg: #e2e8f0;
+  --color-button-bg-hover: #cbd5e1;
+  --color-button-bg-disabled: #cbd5e1;
+  --color-button-text: #0f172a;
+  --color-button-text-disabled: rgba(15, 23, 42, 0.7);
+}
+
+.dark {
+  --color-bg: #020617;
+  --color-surface: rgba(255, 255, 255, 0.03);
+  --color-surface-strong: #0f172a;
+  --color-border: rgba(255, 255, 255, 0.1);
+
+  --color-text: #ffffff;
+  --color-text-muted: #cbd5e1;
+  --color-text-subtle: #94a3b8;
+
+  --color-primary: #60a5fa;
+  --color-primary-soft: rgba(59, 130, 246, 0.1);
+  --color-primary-border: rgba(59, 130, 246, 0.2);
+
+  --color-accent: #c084fc;
+
+  --gradient-hero: linear-gradient(to right, #60a5fa, #c084fc);
+
+  --shadow-panel: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+
+  --color-card-bg: rgba(15, 23, 42, 0.9);
+  --color-card-border: rgba(255, 255, 255, 0.1);
+  --color-card-text: #e2e8f0;
+
+  --color-divider-soft: rgba(255, 255, 255, 0.05);
+
+  --color-chip-bg: rgba(255, 255, 255, 0.03);
+  --color-chip-border: rgba(255, 255, 255, 0.1);
+  --color-chip-text: #cbd5e1;
+  --color-chip-bg-hover: rgba(255, 255, 255, 0.08);
+  --color-chip-border-hover: rgba(255, 255, 255, 0.2);
+  --color-chip-text-hover: #ffffff;
+
+  --color-danger-soft: rgba(239, 68, 68, 0.1);
+  --color-danger-border: rgba(239, 68, 68, 0.2);
+  --color-danger-text: #fca5a5;
+
+  --gradient-user-bubble: linear-gradient(to right, #1d4ed8, #a855f7);
+  --color-user-bubble-text: #ffffff;
+  --shadow-user-bubble: 0 10px 30px rgba(59, 130, 246, 0.12);
+
+  --color-input-bg: #0f172a;
+  --color-input-border: rgba(255, 255, 255, 0.1);
+  --color-input-border-focus: rgba(148, 163, 184, 0.55);
+  --color-input-text: #ffffff;
+  --color-input-placeholder: #64748b;
+  --color-input-ring: rgba(148, 163, 184, 0.16);
+
+  --color-button-bg: #d1d5db;
+  --color-button-bg-hover: #e2e8f0;
+  --color-button-bg-disabled: #94a3b8;
+  --color-button-text: #020617;
+  --color-button-text-disabled: rgba(2, 6, 23, 0.7);
+}

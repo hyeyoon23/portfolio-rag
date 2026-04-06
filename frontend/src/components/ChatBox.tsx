@@ -19,6 +19,7 @@ export default function ChatBox({
     const trimmed = question.trim();
     if (!trimmed || loading) return;
 
+    setQuestion("");
     await onSubmit(trimmed);
   };
 
@@ -29,12 +30,26 @@ export default function ChatBox({
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           placeholder="혜윤에 대해 궁금한 점을 질문해보세요."
-          className="flex-1 rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 text-white outline-none placeholder:text-slate-500 focus:border-slate-500"
+          className="flex-1 rounded-2xl px-4 py-2.5 text-sm outline-none transition"
+          style={{
+            border: "1px solid var(--color-input-border)",
+            background: "var(--color-input-bg)",
+            color: "var(--color-input-text)",
+          }}
         />
+
         <button
           type="submit"
           disabled={loading}
-          className="rounded-2xl bg-gray-300 px-5 py-3 font-medium text-slate-950 transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:bg-slate-400"
+          className="rounded-2xl px-4 py-2.5 text-sm font-medium transition disabled:cursor-not-allowed"
+          style={{
+            background: loading
+              ? "var(--color-button-bg-disabled)"
+              : "var(--color-button-bg)",
+            color: loading
+              ? "var(--color-button-text-disabled)"
+              : "var(--color-button-text)",
+          }}
         >
           {loading ? "생성 중..." : "질문하기"}
         </button>
