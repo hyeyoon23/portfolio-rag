@@ -4,7 +4,7 @@ import { blogPosts } from "@/data/blogData";
 
 export default function BlogDetailPage() {
   const { id } = useParams();
-  const post = blogPosts.find((item) => item.id === id);
+  const post = blogPosts.find((item) => item.id === Number(id));
 
   if (!post) {
     return (
