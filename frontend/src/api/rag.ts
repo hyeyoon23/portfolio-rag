@@ -7,7 +7,9 @@ export interface QueryRequest {
 }
 
 export async function askRag(request: QueryRequest): Promise<QueryResponse> {
-  const response = await fetch(`/api/v1/rag/query`, {
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+  const response = await fetch(`${BASE_URL}/api/v1/rag/query`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

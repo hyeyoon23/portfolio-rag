@@ -5,7 +5,7 @@ export default function AboutPage() {
     <main className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
       <BlogHeader />
 
-      <section className="mx-auto flex max-w-lg flex-col items-center px-4 py-8">
+      <section className="mx-auto flex max-w-lg flex-col items-center px-4 py-15">
         {/* 상단 이모지 */}
         <div className="mb-10 text-3xl">🕯️</div>
 
