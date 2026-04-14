@@ -14,8 +14,13 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOriginPatterns("http://localhost:5173", "http://172.*:5173")
-                        .allowedMethods("*")
+                        .allowedOriginPatterns(
+                                "http://localhost:5173",
+                                "http://172.*:5173",
+                                "https://hyeyoon.store",
+                                "https://www.hyeyoon.store"
+                        )
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*");
             }
         };
