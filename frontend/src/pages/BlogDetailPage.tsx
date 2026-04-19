@@ -27,7 +27,8 @@ export default function BlogDetailPage() {
     <main className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] transition-colors">
       <BlogHeader />
 
-      <article className="mx-auto max-w-4xl px-6 py-16">
+      <article className="mx-auto max-w-3xl px-6 py-16">
+        {/* 뒤로가기 */}
         <Link
           to="/blog"
           className="text-sm text-[var(--color-text-subtle)] transition hover:text-[var(--color-text)]"
@@ -35,14 +36,22 @@ export default function BlogDetailPage() {
           ← 블로그로
         </Link>
 
-        <h1 className="mt-6 text-4xl font-bold tracking-tight">{post.title}</h1>
+        {/* 제목 */}
+        <h1 className="mt-6 text-3xl sm:text-4xl font-bold tracking-tight leading-tight">
+          {post.title}
+        </h1>
 
-        <p className="mt-4 text-[var(--color-text-muted)]">{post.summary}</p>
+        {/* 요약 */}
+        <p className="mt-4 text-sm sm:text-base leading-7 text-[var(--color-text-muted)]">
+          {post.summary}
+        </p>
 
-        <div className="prose mt-10 max-w-none">
-          <div className="answer-text whitespace-pre-wrap leading-8">
-            {post.content}
-          </div>
+        {/* 구분선 */}
+        <div className="mt-8 border-t border-[var(--color-divider-soft)]" />
+
+        {/* 본문 */}
+        <div className="mt-10">
+          <div className="blog-content whitespace-pre-wrap">{post.content}</div>
         </div>
       </article>
     </main>

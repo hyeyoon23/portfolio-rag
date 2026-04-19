@@ -20,12 +20,14 @@ export default function BlogHeader() {
   return (
     <header className="border-b border-(--color-border) bg-(--color-bg)">
       <div className="mx-auto flex h-14 max-w-4xl items-center justify-between px-6 sm:px-8">
-        <Link
-          to="/blog"
-          className="text-xl font-bold tracking-tight text-(--color-text)"
-        >
-          HyeyoonLog
-        </Link>
+        <div className="flex gap-5">
+          <Link to="/blog" className={navClass(isPosts)}>
+            Posts
+          </Link>
+          <Link to="/about" className={navClass(isAbout)}>
+            About
+          </Link>
+        </div>
 
         <nav className="flex items-center gap-5">
           <Link
@@ -39,12 +41,6 @@ export default function BlogHeader() {
           >
             <BotMessageSquare size={16} strokeWidth={1.8} />
             <span>AI Chat</span>
-          </Link>
-          <Link to="/blog" className={navClass(isPosts)}>
-            Posts
-          </Link>
-          <Link to="/about" className={navClass(isAbout)}>
-            About
           </Link>
 
           <button
