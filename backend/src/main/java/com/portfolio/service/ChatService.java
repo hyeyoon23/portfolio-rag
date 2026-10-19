@@ -44,7 +44,7 @@ public class ChatService {
 
             return chatModel.call(prompt);
         } catch (Exception e) {
-            log.error("OpenAI 챗 호출 중 오류 발생: {}", e.getMessage(), e);
+            log.error("LLM 호출 실패: model={}, 원인={}", model, e.getMessage(), e);
             return null;
         }
     }
