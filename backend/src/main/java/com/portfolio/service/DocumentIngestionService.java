@@ -22,9 +22,22 @@ public class DocumentIngestionService {
         this.markdownDocumentReader = markdownDocumentReader;
     }
 
-    public int ingestAll() throws IOException {
+    public IngestionResult ingestAll() throws IOException {
         List<Document> documents = markdownDocumentReader.readAll();
+
+        long fileCount = documents.stream()
+                .map(doc -> doc.getMetadata().get("source"))
+                .distinct()
+                .count();
+
         vectorStore.add(documents);
-        return documents.size();
+
+        return new IngestionResult((int) fileCount, documents.size());
+    }
+
+    /**
+     * 적재 결과 요약 - 등록된 원본 파일 수와, 그 파일들이 쪼개진 청크(Document) 총 개수.
+     */
+    public record IngestionResult(int fileCount, int chunkCount) {
     }
 }
