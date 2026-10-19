@@ -4,7 +4,6 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-echo ".DS_Store" >> .gitignore
 
 ### STS ###
 .apt_generated
@@ -18,6 +17,7 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 .env
+docs
 
 ### IntelliJ IDEA ###
 .idea
