@@ -10,6 +10,6 @@ export interface QueryResponse {
 
 export interface ApiResponse<T> {
   success: boolean;
-  data: T;
-  message?: string;
+  data: T | null;
+  error: string | null;
 }
