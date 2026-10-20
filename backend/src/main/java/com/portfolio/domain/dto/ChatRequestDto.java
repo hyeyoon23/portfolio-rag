@@ -11,8 +11,8 @@ public class ChatRequestDto {
     @Schema(description = "사용자 질문", example = "안녕하세요")
     private String query;
 
-    @Schema(description = "사용할 LLM 모델", example = "gemini-2.5-flash", defaultValue = "gemini-2.5-flash")
-    private String model = "gemini-2.5-flash";
+    @Schema(description = "사용할 LLM 모델", example = "gemini-3.5-flash-lite", defaultValue = "gemini-3.5-flash-lite")
+    private String model = "gemini-3.5-flash-lite";
 
     public String getQuery() { return query; }
     public void setQuery(String query) { this.query = query; }
