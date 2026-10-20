@@ -1,4 +1,5 @@
 import BlogHeader from "@/components/BlogHeader";
+import Footer from "@/components/Footer";
 
 interface CakeLayer {
   title: string;
@@ -64,10 +65,10 @@ const CAKE_LAYERS: CakeLayer[] = [
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+    <main className="flex min-h-screen flex-col bg-[var(--color-bg)] text-[var(--color-text)]">
       <BlogHeader />
 
-      <section className="mx-auto flex max-w-lg flex-col items-center px-4 py-15">
+      <section className="mx-auto flex w-full max-w-lg flex-1 flex-col items-center px-4 py-15">
         {/* 상단 이모지 */}
         <div className="mb-10 text-3xl">🕯️</div>
 
@@ -109,6 +110,8 @@ export default function AboutPage() {
           ))}
         </div>
       </section>
+
+      <Footer />
     </main>
   );
 }

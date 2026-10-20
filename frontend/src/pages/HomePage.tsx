@@ -69,7 +69,7 @@ export default function HomePage() {
             <ThemeToggleButton />
 
             <Link
-              to="/blog"
+              to="/home"
               className="inline-flex min-h-11 items-center whitespace-nowrap px-1 text-sm text-(--color-text-subtle) transition hover:text-(--color-text)"
             >
               블로그 보러 가기 →

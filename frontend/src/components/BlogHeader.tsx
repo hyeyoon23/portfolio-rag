@@ -6,12 +6,13 @@ export default function BlogHeader() {
   const location = useLocation();
 
   const isHome = location.pathname === "/";
-  const isPosts = location.pathname.startsWith("/blog");
+  const isMain = location.pathname === "/home";
+  const isPosts = location.pathname.startsWith("/posts");
   const isAbout = location.pathname === "/about";
 
   const navClass = (active: boolean) =>
     [
-      "inline-flex min-h-11 items-center whitespace-nowrap px-2 text-sm font-medium transition-colors",
+      "inline-flex min-h-11 items-center whitespace-nowrap px-1.5 text-sm font-medium transition-colors sm:px-2",
       active
         ? "text-[var(--color-text)]"
         : "text-[var(--color-text-subtle)] hover:text-[var(--color-text)]",
@@ -20,8 +21,11 @@ export default function BlogHeader() {
   return (
     <header className="border-b border-(--color-border) bg-(--color-bg)">
       <div className="mx-auto flex h-12 max-w-4xl items-center justify-between gap-2 px-2 sm:px-6">
-        <div className="flex items-center gap-1 sm:gap-2">
-          <Link to="/blog" className={navClass(isPosts)}>
+        <div className="flex items-center sm:gap-2">
+          <Link to="/home" className={navClass(isMain)}>
+            Home
+          </Link>
+          <Link to="/posts" className={navClass(isPosts)}>
             Posts
           </Link>
           <Link to="/about" className={navClass(isAbout)}>

@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import BlogHeader from "@/components/BlogHeader";
+import Footer from "@/components/Footer";
 import { blogPosts } from "@/data/blogData";
 
 export default function BlogDetailPage() {
@@ -8,29 +9,31 @@ export default function BlogDetailPage() {
 
   if (!post) {
     return (
-      <main className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+      <main className="flex min-h-screen flex-col bg-[var(--color-bg)] text-[var(--color-text)]">
         <BlogHeader />
-        <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-16">
+        <div className="mx-auto w-full max-w-4xl flex-1 px-4 py-10 sm:px-6 sm:py-16">
           <p>존재하지 않는 게시글입니다.</p>
           <Link
-            to="/blog"
+            to="/posts"
             className="mt-4 inline-flex min-h-11 items-center text-[var(--color-text-subtle)] hover:text-[var(--color-text)]"
           >
             ← 목록으로 돌아가기
           </Link>
         </div>
+
+        <Footer />
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] transition-colors">
+    <main className="flex min-h-screen flex-col bg-[var(--color-bg)] text-[var(--color-text)] transition-colors">
       <BlogHeader />
 
-      <article className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-16">
+      <article className="mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6 sm:py-16">
         {/* 뒤로가기 */}
         <Link
-          to="/blog"
+          to="/posts"
           className="inline-flex min-h-11 items-center text-sm text-[var(--color-text-subtle)] transition hover:text-[var(--color-text)]"
         >
           ← 목록으로
@@ -54,6 +57,8 @@ export default function BlogDetailPage() {
           <div className="blog-content whitespace-pre-wrap">{post.content}</div>
         </div>
       </article>
+
+      <Footer />
     </main>
   );
 }
