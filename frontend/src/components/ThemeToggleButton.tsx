@@ -9,10 +9,7 @@ export default function ThemeToggleButton() {
       type="button"
       onClick={toggleTheme}
       aria-label="테마 변경"
-      className="transition text-(--color-text-subtle) transition hover:text-(--color-text)"
-      onMouseEnter={(e) => {
-        e.currentTarget.style.accentColor = "var(--color-chip-bg-hover)";
-      }}
+      className="inline-flex w-8 items-center justify-center text-(--color-text-subtle) transition hover:text-(--color-text)"
     >
       {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
     </button>

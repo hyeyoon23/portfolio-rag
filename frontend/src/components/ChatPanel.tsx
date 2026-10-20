@@ -1,8 +1,26 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import ChatBox from "./ChatBox";
 import AnswerCard from "./AnswerCard";
 import type { Message } from "@/types/chat";
 import { EXAMPLE_QUESTIONS } from "@/constants.ts/chat";
+
+const BOT_AVATAR_SRC = "/hyeyoon-avatar.png";
+
+function BotBubble({ children }: { children: ReactNode }) {
+  return (
+    <div className="flex items-start justify-start gap-1">
+      <img
+        src={BOT_AVATAR_SRC}
+        alt=""
+        className="h-8 w-8 shrink-0 rounded-full object-cover sm:h-12 sm:w-12"
+        style={{ borderRadius: "50%" }}
+      />
+      <div className="mt-4 flex min-w-0 max-w-[85%] flex-col items-start gap-1 sm:mt-6 sm:max-w-[80%]">
+        {children}
+      </div>
+    </div>
+  );
+}
 
 interface ChatPanelProps {
   messages: Message[];
@@ -15,15 +33,18 @@ export default function ChatPanel({
   loading,
   onAsk,
 }: ChatPanelProps) {
-  const bottomRef = useRef<HTMLDivElement | null>(null);
+  const listRef = useRef<HTMLDivElement | null>(null);
 
+  // scrollIntoView는 overflow-hidden인 바깥 컨테이너까지 스크롤시키므로 목록만 스크롤
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    const list = listRef.current;
+    if (!list) return;
+    list.scrollTo({ top: list.scrollHeight, behavior: "smooth" });
   }, [messages, loading]);
 
   return (
     <div
-      className="flex h-[65vh] flex-col overflow-hidden rounded-3xl backdrop-blur transition-colors"
+      className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-3xl sm:max-h-[65dvh] backdrop-blur transition-colors"
       style={{
         border: "1px solid var(--color-border)",
         background: "var(--color-surface)",
@@ -31,7 +52,10 @@ export default function ChatPanel({
       }}
     >
       {/* 메시지 영역 */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 sm:px-6">
+      <div
+        ref={listRef}
+        className="chat-scroll min-h-0 flex-1 overflow-y-auto px-2 pt-4 pb-6 sm:pl-3 sm:pr-4"
+      >
         <div className="space-y-4">
           {messages.map((message) => {
             if (message.role === "user") {
@@ -69,9 +93,9 @@ export default function ChatPanel({
             }
 
             return (
-              <div key={message.id} className="flex justify-start">
+              <BotBubble key={message.id}>
                 <div
-                  className="max-w-[85%] rounded-2xl rounded-bl-md px-4 py-3 text-sm leading-6"
+                  className="max-w-full rounded-2xl rounded-tl-md px-4 py-3 text-sm leading-6"
                   style={{
                     border: "1px solid var(--color-card-border)",
                     background: "var(--color-card-bg)",
@@ -84,56 +108,48 @@ export default function ChatPanel({
                     message.content
                   )}
                 </div>
-              </div>
+              </BotBubble>
             );
           })}
 
           {loading && (
-            <div className="flex justify-start">
+            <BotBubble>
               <div
-                className="max-w-[85%] rounded-2xl rounded-bl-md px-4 py-3 text-sm"
+                role="status"
+                className="w-64 max-w-full rounded-2xl rounded-tl-md px-4 py-3"
                 style={{
                   border: "1px solid var(--color-card-border)",
                   background: "var(--color-card-bg)",
-                  color: "var(--color-text-subtle)",
                 }}
               >
-                답변을 생성하고 있습니다...
+                <span className="sr-only">답변을 생성하고 있습니다...</span>
+                <div className="flex animate-pulse flex-col gap-2 py-1">
+                  {["w-full", "w-5/6", "w-2/3"].map((width) => (
+                    <div
+                      key={width}
+                      className={`h-3 rounded-full ${width}`}
+                      style={{ background: "var(--color-skeleton)" }}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
+            </BotBubble>
           )}
-
-          <div ref={bottomRef} />
         </div>
       </div>
 
       {/* 예시 질문 */}
       <div
-        className="px-4 py-3 sm:px-6"
+        className="shrink-0 px-3 py-3 sm:px-4"
         style={{ borderTop: "1px solid var(--color-divider-soft)" }}
       >
-        <div className="flex flex-wrap gap-2">
+        {/* 좁은 화면: 한 줄 가로 스크롤 / sm 이상: 줄바꿈 */}
+        <div className="no-scrollbar flex gap-2 overflow-x-auto sm:flex-wrap sm:overflow-visible">
           {EXAMPLE_QUESTIONS.map((item) => (
             <button
               key={item}
               onClick={() => onAsk(item)}
-              className="rounded-full px-2 py-1 text-[12px] transition"
-              style={{
-                border: "1px solid var(--color-chip-border)",
-                background: "var(--color-chip-bg)",
-                color: "var(--color-chip-text)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor =
-                  "var(--color-chip-border-hover)";
-                e.currentTarget.style.background = "var(--color-chip-bg-hover)";
-                e.currentTarget.style.color = "var(--color-chip-text-hover)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "var(--color-chip-border)";
-                e.currentTarget.style.background = "var(--color-chip-bg)";
-                e.currentTarget.style.color = "var(--color-chip-text)";
-              }}
+              className="inline-flex shrink-0 items-center whitespace-nowrap rounded-full border border-(--color-chip-border) bg-(--color-chip-bg) px-3 py-1 text-sm text-(--color-chip-text) transition hover:border-(--color-chip-border-hover) hover:bg-(--color-chip-bg-hover) hover:text-(--color-chip-text-hover) pointer-coarse:min-h-11 sm:px-2 sm:text-[12px]"
             >
               {item}
             </button>
@@ -143,7 +159,7 @@ export default function ChatPanel({
 
       {/* 입력창 */}
       <div
-        className="px-4 py-3 sm:px-6"
+        className="shrink-0 px-3 py-3 sm:px-4"
         style={{ borderTop: "1px solid var(--color-border)" }}
       >
         <ChatBox onSubmit={onAsk} loading={loading} />

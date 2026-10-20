@@ -24,6 +24,9 @@
   --color-card-text: #0f172a;
 
   --color-divider-soft: rgba(15, 23, 42, 0.06);
+  --color-skeleton: rgba(15, 23, 42, 0.08);
+  --color-scrollbar-thumb: #d4d4d8;
+  --color-scrollbar-thumb-hover: #a1a1aa;
 
   --color-chip-bg: rgba(15, 23, 42, 0.03);
   --color-chip-border: rgba(15, 23, 42, 0.08);
@@ -60,6 +63,8 @@
   --about-red: #f28c8c;
   --about-green-soft: #d9e3d7;
   --about-green: #a8c89f;
+  --about-peach: #f8d8c0;
+  --about-text: #1f2937;
 }
 
 .dark {
@@ -88,6 +93,9 @@
   --color-card-text: #e2e8f0;
 
   --color-divider-soft: rgba(255, 255, 255, 0.05);
+  --color-skeleton: rgba(255, 255, 255, 0.1);
+  --color-scrollbar-thumb: #3f3f46;
+  --color-scrollbar-thumb-hover: #52525b;
 
   --color-chip-bg: rgba(255, 255, 255, 0.03);
   --color-chip-border: rgba(255, 255, 255, 0.1);
@@ -118,10 +126,5 @@
   --color-button-text-disabled: rgba(2, 6, 23, 0.7);
   --color-button-text-on-primary: #020617;
 
-  --about-blue: #274c59;
-  --about-yellow: #5c5730;
-  --about-purple: #3c3e57;
-  --about-red: #7a2e2e;
-  --about-green-soft: #2e3f2c;
-  --about-green: #3e5f3a;
+  /* About 케이크는 다크 모드에서도 파스텔 배경 + 고정 글자색(:root 값)을 그대로 사용 */
 }

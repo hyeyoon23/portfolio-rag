@@ -11,7 +11,7 @@ export default function BlogHeader() {
 
   const navClass = (active: boolean) =>
     [
-      "text-sm font-medium transition-colors",
+      "inline-flex min-h-11 items-center whitespace-nowrap px-2 text-sm font-medium transition-colors",
       active
         ? "text-[var(--color-text)]"
         : "text-[var(--color-text-subtle)] hover:text-[var(--color-text)]",
@@ -19,8 +19,8 @@ export default function BlogHeader() {
 
   return (
     <header className="border-b border-(--color-border) bg-(--color-bg)">
-      <div className="mx-auto flex h-14 max-w-4xl items-center justify-between px-6 sm:px-8">
-        <div className="flex gap-5">
+      <div className="mx-auto flex h-12 max-w-4xl items-center justify-between gap-2 px-2 sm:px-6">
+        <div className="flex items-center gap-1 sm:gap-2">
           <Link to="/blog" className={navClass(isPosts)}>
             Posts
           </Link>
@@ -29,11 +29,11 @@ export default function BlogHeader() {
           </Link>
         </div>
 
-        <nav className="flex items-center gap-5">
+        <nav className="flex items-center gap-1 sm:gap-2">
           <Link
             to="/"
             className={[
-              "flex items-center gap-1 rounded-lg px-2 py-1 text-sm transition duration-300",
+              "inline-flex min-h-8 items-center gap-1 whitespace-nowrap rounded-lg px-2 text-sm transition duration-300",
               isHome
                 ? "text-(--color-text) font-medium"
                 : "text-(--color-text-subtle) hover:text-white hover:bg-linear-to-r hover:from-blue-500 hover:to-purple-500",
@@ -46,7 +46,7 @@ export default function BlogHeader() {
           <button
             type="button"
             aria-label="검색"
-            className="text-(--color-text-subtle) transition hover:text-(--color-text)"
+            className="inline-flex w-8 items-center justify-center text-(--color-text-subtle) transition hover:text-(--color-text)"
           >
             <Search size={18} strokeWidth={1.8} />
           </button>

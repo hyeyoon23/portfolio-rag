@@ -27,12 +27,12 @@ export default function ChatBox({
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="flex flex-col gap-3 sm:flex-row">
+      <div className="flex gap-2">
         <input
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           placeholder="혜윤에 대해 궁금한 점을 질문해보세요."
-          className="flex-1 rounded-2xl px-4 py-2.5 text-sm outline-none transition"
+          className="h-11 min-w-0 flex-1 rounded-2xl px-4 text-base outline-none transition"
           style={{
             border: "1px solid var(--color-input-border)",
             background: "var(--color-input-bg)",
@@ -43,25 +43,8 @@ export default function ChatBox({
         <button
           type="submit"
           disabled={isDisabled}
-          className="flex items-center justify-center rounded-2xl px-4 py-2.5 text-sm font-medium transition disabled:cursor-not-allowed"
-          style={{
-            background: isDisabled
-              ? "var(--color-button-bg-disabled)"
-              : "var(--color-primary)",
-            color: isDisabled
-              ? "var(--color-button-text-disabled)"
-              : "var(--color-button-text-on-primary)",
-          }}
-          onMouseEnter={(e) => {
-            if (!isDisabled) {
-              e.currentTarget.style.background = "var(--color-primary-hover)";
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (!isDisabled) {
-              e.currentTarget.style.background = "var(--color-primary)";
-            }
-          }}
+          aria-label="질문 전송"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-(--color-primary) text-(--color-button-text-on-primary) transition enabled:hover:bg-(--color-primary-hover) disabled:cursor-not-allowed disabled:bg-(--color-button-bg-disabled) disabled:text-(--color-button-text-disabled) sm:w-auto sm:px-4"
         >
           {loading ? (
             <Loader2 className="w-4 h-4 animate-spin" />

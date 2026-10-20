@@ -8,7 +8,7 @@ export default function BlogPage() {
     <main className="min-h-screen bg-(--color-bg) text-(--color-text) transition-colors">
       <BlogHeader />
 
-      <section className="mx-auto max-w-4xl px-6 py-8 sm:px-8">
+      <section className="mx-auto max-w-4xl px-4 py-8 sm:px-8">
         <div className="mb-15">
           <p
             className="text-md font-medium bg-clip-text text-transparent"
@@ -17,7 +17,7 @@ export default function BlogPage() {
             Thanks for stopping by.
           </p>
 
-          <h1 className="mt-5 text-2xl font-bold tracking-tight">
+          <h1 className="mt-5 text-[clamp(1.25rem,5vw,1.5rem)] font-bold tracking-tight">
             Welcome to HYEYOON's Dev Blog 🥳
           </h1>
 
@@ -32,7 +32,7 @@ export default function BlogPage() {
               target="_blank"
               rel="noreferrer"
               aria-label="GitHub"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-subtle)] transition hover:border-[var(--color-primary-border)] hover:text-[var(--color-text)]"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-subtle)] transition hover:border-[var(--color-primary-border)] hover:text-[var(--color-text)]"
             >
               <FaGithub size={18} strokeWidth={1.8} />
             </a>
@@ -42,7 +42,7 @@ export default function BlogPage() {
               target="_blank"
               rel="noreferrer"
               aria-label="Instagram"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-subtle)] transition hover:border-[var(--color-primary-border)] hover:text-[var(--color-text)]"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-subtle)] transition hover:border-[var(--color-primary-border)] hover:text-[var(--color-text)]"
             >
               <FaInstagram size={18} strokeWidth={1.8} />
             </a>
@@ -52,7 +52,7 @@ export default function BlogPage() {
         <div className="mb-7">
           <div className="flex items-center gap-3">
             <div className="h-8 w-1 rounded-full bg-(--color-primary)" />
-            <h2 className="text-2xl font-bold tracking-tight">Blog</h2>
+            <h2 className="text-[clamp(1.25rem,5vw,1.5rem)] font-bold tracking-tight">Blog</h2>
           </div>
 
           <p className="text-sm mt-3 text-(--color-text-muted)">

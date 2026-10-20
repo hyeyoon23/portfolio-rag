@@ -18,6 +18,21 @@ body {
     sans-serif;
   background: var(--color-bg);
   color: var(--color-text);
+  /* 긴 영문 단어/URL이 가로 스크롤을 만들지 않게 */
+  overflow-wrap: anywhere;
+  /* viewport-fit=cover일 때 가로 모드 노치 영역 피하기 */
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+img,
+video {
+  max-width: 100%;
+}
+
+pre {
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 button {
@@ -29,10 +44,13 @@ button {
   background: var(--color-card-bg);
 }
 
-.blog-card:hover {
-  border-color: var(--color-primary-border);
-  background: var(--color-surface-strong);
-  transform: translateY(-2px);
+/* 터치 기기에서 hover 상태가 남지 않게 마우스 환경에서만 적용 */
+@media (hover: hover) {
+  .blog-card:hover {
+    border-color: var(--color-primary-border);
+    background: var(--color-surface-strong);
+    transform: translateY(-2px);
+  }
 }
 
 .about-card {
@@ -51,5 +69,43 @@ button {
 
 .about-content {
   padding: 10px;
-  font-size: 13px;
+  font-size: 14px;
+  /* 파스텔 배경 위라 테마와 관계없이 글자색 고정 */
+  color: var(--about-text);
+}
+
+/* 가로 스크롤은 유지하고 스크롤바만 숨김 */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* 챗봇 메시지 목록 스크롤바 */
+.chat-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-scrollbar-thumb);
+  border-radius: 9999px;
+}
+
+.chat-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--color-scrollbar-thumb-hover);
+}
+
+/* Chrome 121+는 scrollbar-width/color가 있으면 ::-webkit-scrollbar를 무시하므로
+   표준 속성은 ::-webkit-scrollbar 미지원 브라우저(Firefox)에만 적용 */
+@supports not selector(::-webkit-scrollbar) {
+  .chat-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-scrollbar-thumb) transparent;
+  }
 }

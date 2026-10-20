@@ -1,5 +1,67 @@
 import BlogHeader from "@/components/BlogHeader";
 
+interface CakeLayer {
+  title: string;
+  // 위층일수록 좁게: 데스크톱 최대 폭과 좁은 화면에서의 비율 중 작은 값
+  width: string;
+  color: string;
+  gridClass: string;
+  items: { label: string; href?: string }[];
+}
+
+const CAKE_LAYERS: CakeLayer[] = [
+  {
+    title: "name",
+    width: "min(8rem, 40%)",
+    color: "var(--about-blue)",
+    gridClass: "grid-cols-1",
+    items: [{ label: "이혜윤" }],
+  },
+  {
+    title: "birth",
+    width: "min(12rem, 55%)",
+    color: "var(--about-yellow)",
+    gridClass: "grid-cols-1",
+    items: [{ label: "2003" }],
+  },
+  {
+    title: "tech stack",
+    width: "min(24rem, 80%)",
+    color: "var(--about-peach)",
+    // 좁은 화면에서는 2x2로 줄바꿈
+    gridClass: "grid-cols-2 sm:grid-cols-4",
+    items: [
+      { label: "React" },
+      { label: "TypeScript" },
+      { label: "Spring Boot" },
+      { label: "MySQL" },
+    ],
+  },
+  {
+    title: "favorite",
+    width: "min(27rem, 90%)",
+    color: "var(--about-red)",
+    gridClass: "grid-cols-5",
+    items: [
+      { label: "여행" },
+      { label: "야구" },
+      { label: "과일" },
+      { label: "러닝" },
+      { label: "음악" },
+    ],
+  },
+  {
+    title: "more info",
+    width: "100%",
+    color: "var(--about-green-soft)",
+    gridClass: "grid-cols-2",
+    items: [
+      { label: "Instagram", href: "https://instagram.com/hyeyoon_23" },
+      { label: "Github", href: "https://github.com/hyeyoon23" },
+    ],
+  },
+];
+
 export default function AboutPage() {
   return (
     <main className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
@@ -10,66 +72,41 @@ export default function AboutPage() {
         <div className="mb-10 text-3xl">🕯️</div>
 
         <div className="flex w-full flex-col items-center gap-3">
-          {/* 이름 */}
-          <div className="about-card w-32">
-            <div className="about-title">이름은...</div>
-            <div className="about-content bg-[var(--about-blue)]">이혜윤</div>
-          </div>
+          {CAKE_LAYERS.map((layer) => (
+            <div
+              key={layer.title}
+              className="about-card"
+              style={{ width: layer.width }}
+            >
+              <div className="about-title">{layer.title}</div>
 
-          {/* 나이 */}
-          <div className="about-card w-44">
-            <div className="about-title">나이는...</div>
-            <div className="about-content bg-[var(--about-yellow)]">22~24</div>
-          </div>
-
-          {/* 직업 */}
-          <div className="about-card w-65">
-            <div className="about-title">하는 일은...</div>
-            <div className="about-content bg-[var(--about-purple)]">
-              프론트엔드 개발자 지망생
+              {/* gap-px + 검은 배경으로 칸 사이 구분선 표시 */}
+              <div className={`grid gap-px bg-black ${layer.gridClass}`}>
+                {layer.items.map((item) =>
+                  item.href ? (
+                    <a
+                      key={item.label}
+                      href={item.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="about-content flex min-h-11 cursor-pointer items-center justify-center transition hover:opacity-80"
+                      style={{ background: layer.color }}
+                    >
+                      {item.label}
+                    </a>
+                  ) : (
+                    <div
+                      key={item.label}
+                      className="about-content flex items-center justify-center"
+                      style={{ background: layer.color }}
+                    >
+                      {item.label}
+                    </div>
+                  ),
+                )}
+              </div>
             </div>
-          </div>
-
-          {/* 좋아하는 것 */}
-          <div className="about-card w-90">
-            <div className="about-title">좋아하는 것은...</div>
-
-            <div className="grid grid-cols-4">
-              {["집", "야구", "토마토", "러닝"].map((item) => (
-                <div
-                  key={item}
-                  className="about-content border-r last:border-r-0 bg-[var(--about-red)]"
-                >
-                  {item}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* 링크 */}
-          <div className="about-card w-full">
-            <div className="about-title">혹시 더 궁금하다면...</div>
-
-            <div className="grid grid-cols-2">
-              <a
-                href="https://instagram.com/hyeyoon_23"
-                target="_blank"
-                rel="noreferrer"
-                className="about-content border-r bg-[var(--about-green-soft)] cursor-pointer transition hover:opacity-80"
-              >
-                Instagram
-              </a>
-
-              <a
-                href="https://github.com/hyeyoon23"
-                target="_blank"
-                rel="noreferrer"
-                className="about-content bg-[var(--about-green-soft)] cursor-pointer transition hover:opacity-80"
-              >
-                Github
-              </a>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
     </main>
