@@ -24,6 +24,7 @@ import {
   SiSpring,
   SiTypescript,
 } from "react-icons/si";
+import FolderIcon from "@/components/FolderIcon";
 import { HERO_IMAGES } from "@/data/hero";
 import { projects, type Project } from "@/data/projects";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
@@ -124,22 +125,8 @@ const FOLDER_COLORS: Record<
   about: { fill: "var(--about-yellow)", back: 0.6, front: 0.9 },
 };
 
-function FolderIcon({ name }: { name: FolderName }) {
-  const { fill, back, front } = FOLDER_COLORS[name];
-  return (
-    <svg viewBox="0 0 64 52" aria-hidden="true" className="h-12 w-14">
-      <path
-        d="M4 8a4 4 0 0 1 4-4h14l6 6h28a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"
-        fill={fill}
-        fillOpacity={back}
-      />
-      <path
-        d="M4 18a4 4 0 0 1 4-4h48a4 4 0 0 1 4 4v26a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"
-        fill={fill}
-        fillOpacity={front}
-      />
-    </svg>
-  );
+function DeskFolderIcon({ name }: { name: FolderName }) {
+  return <FolderIcon {...FOLDER_COLORS[name]} />;
 }
 
 function CursorIcon() {
@@ -419,7 +406,7 @@ function DeskItemNode({
           }}
           className="flex w-20 flex-col items-center rounded-lg p-1 transition hover:bg-(--color-chip-bg-hover)"
         >
-          <FolderIcon name={item.name} />
+          <DeskFolderIcon name={item.name} />
           <Caption>{item.name}</Caption>
         </button>
       )}

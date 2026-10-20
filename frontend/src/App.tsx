@@ -10,6 +10,7 @@ import BlogPage from "./pages/BlogPage";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import MainPage from "./pages/MainPage";
+import GuestbookPage from "./pages/GuestbookPage";
 
 // 예전 /blog 링크로 들어와도 /posts로 이동
 function LegacyPostRedirect() {
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/home" element={<MainPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/guestbook" element={<GuestbookPage />} />
         <Route path="/posts" element={<BlogPage />} />
         <Route path="/posts/:id" element={<BlogDetailPage />} />
         <Route path="/blog" element={<Navigate to="/posts" replace />} />

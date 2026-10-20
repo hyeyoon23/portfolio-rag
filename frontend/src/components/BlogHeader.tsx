@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { BotMessageSquare, Search } from "lucide-react";
+import { BotMessageSquare, NotebookPen } from "lucide-react";
 import ThemeToggleButton from "./ThemeToggleButton";
 
 export default function BlogHeader() {
@@ -9,6 +9,7 @@ export default function BlogHeader() {
   const isMain = location.pathname === "/home";
   const isPosts = location.pathname.startsWith("/posts");
   const isAbout = location.pathname === "/about";
+  const isGuestbook = location.pathname === "/guestbook";
 
   const navClass = (active: boolean) =>
     [
@@ -47,13 +48,19 @@ export default function BlogHeader() {
             <span>AI Chat</span>
           </Link>
 
-          <button
-            type="button"
-            aria-label="검색"
-            className="inline-flex w-8 items-center justify-center text-(--color-text-subtle) transition hover:text-(--color-text)"
+          <Link
+            to="/guestbook"
+            aria-label="방명록"
+            title="방명록"
+            className={[
+              "inline-flex h-11 w-8 items-center justify-center transition",
+              isGuestbook
+                ? "text-(--color-text)"
+                : "text-(--color-text-subtle) hover:text-(--color-text)",
+            ].join(" ")}
           >
-            <Search size={18} strokeWidth={1.8} />
-          </button>
+            <NotebookPen size={18} strokeWidth={1.8} />
+          </Link>
 
           <ThemeToggleButton />
         </nav>
