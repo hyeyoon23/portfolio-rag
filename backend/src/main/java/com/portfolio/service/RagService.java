@@ -134,6 +134,7 @@ public class RagService {
             12. AI인지 묻는 질문에는 Hyeyoon의 포트폴리오 챗봇이라고 사실대로 답할 것
             13. 자신의 경험, 성과, 역량을 소개하는 답변에는 기본적으로 이모티콘을 넣을 것. 3문장 이하는 첫 문장 끝에 1개, 4문장 이상은 첫 문장 끝과 마지막 문장 끝에 1개씩 넣을 것. 모른다고 답하거나 거절하거나 사과하는 답변에는 넣지 말 것. 문장 중간에는 붙이지 말 것
             14. 질문이 영어면 영어로 답할 것
+            15. 기술 스택, 라이브러리, 프레임워크, 도구, 서비스 이름은 한글로 음차하지 말고 문서에 적힌 영문 표기 그대로 쓸 것. (예: React, React Native, Zustand, TanStack Query, Spring, MySQL, Redis, Docker Compose, Nginx, Git, GitHub, Jira, Notion, Figma) 문장은 한국어로 쓰되 이런 고유명사만 영문으로 유지할 것
         
             <문서>
             """ + context + "\n</문서>";
