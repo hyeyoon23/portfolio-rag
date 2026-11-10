@@ -18,6 +18,7 @@ export interface AnswerMessage extends BaseMessage {
 
 export interface ErrorMessage extends BaseMessage {
   type: "error";
+  retryQuestion?: string;
 }
 
 export type Message = TextMessage | AnswerMessage | ErrorMessage;

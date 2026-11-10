@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { askRag } from "@/api/rag";
+import { askRag, RagError } from "@/api/rag";
 import type { Message } from "@/types/chat";
 import ChatPanel from "@/components/ChatPanel";
 import ThemeToggleButton from "@/components/ThemeToggleButton";
@@ -16,6 +16,67 @@ export default function HomePage() {
     },
   ]);
   const [loading, setLoading] = useState(false);
+  // 서버를 깨우며 재시도 중이면 최초 요청 시각, 아니면 null
+  const [wakingSince, setWakingSince] = useState<number | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
+
+  // 페이지를 떠나면 진행 중인 요청/재시도를 취소
+  useEffect(() => () => abortRef.current?.abort(), []);
+
+  const runQuery = async (question: string) => {
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+
+    setLoading(true);
+    setWakingSince(null);
+
+    try {
+      const result = await askRag(
+        { query: question },
+        {
+          signal: controller.signal,
+          onWaking: (startedAt) => {
+            if (!controller.signal.aborted) setWakingSince(startedAt);
+          },
+        },
+      );
+      if (controller.signal.aborted) return;
+
+      const answerMessage: Message = {
+        id: Date.now() + 1,
+        role: "assistant",
+        type: "answer",
+        content: result.answer,
+      };
+
+      setMessages((prev) => [...prev, answerMessage]);
+    } catch (err) {
+      if (controller.signal.aborted) return;
+
+      const errorMessage: Message = {
+        id: Date.now() + 2,
+        role: "assistant",
+        type: "error",
+        content:
+          err instanceof Error
+            ? err.message
+            : "요청 처리 중 오류가 발생했습니다.",
+        ...(err instanceof RagError && err.kind === "wakeupTimeout"
+          ? { retryQuestion: question }
+          : {}),
+      };
+
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
+      // 새 요청이 이미 시작됐다면 그 요청의 로딩 상태를 건드리지 않는다.
+      if (abortRef.current === controller) {
+        abortRef.current = null;
+        setLoading(false);
+        setWakingSince(null);
+      }
+    }
+  };
 
   const handleAsk = async (question: string) => {
     const trimmed = question.trim();
@@ -29,34 +90,21 @@ export default function HomePage() {
     };
 
     setMessages((prev) => [...prev, userMessage]);
-    setLoading(true);
+    await runQuery(trimmed);
+  };
 
-    try {
-      const result = await askRag({ query: trimmed });
+  // 오류 말풍선의 "다시 시도": 질문 말풍선은 그대로 두고 오류 말풍선만 걷어낸 뒤 재요청
+  const handleRetry = async (errorMessageId: number, question: string) => {
+    if (loading) return;
+    setMessages((prev) => prev.filter((m) => m.id !== errorMessageId));
+    await runQuery(question);
+  };
 
-      const answerMessage: Message = {
-        id: Date.now() + 1,
-        role: "assistant",
-        type: "answer",
-        content: result.answer,
-      };
-
-      setMessages((prev) => [...prev, answerMessage]);
-    } catch (err) {
-      const errorMessage: Message = {
-        id: Date.now() + 2,
-        role: "assistant",
-        type: "error",
-        content:
-          err instanceof Error
-            ? err.message
-            : "요청 처리 중 오류가 발생했습니다.",
-      };
-
-      setMessages((prev) => [...prev, errorMessage]);
-    } finally {
-      setLoading(false);
-    }
+  const handleCancel = () => {
+    abortRef.current?.abort();
+    abortRef.current = null;
+    setLoading(false);
+    setWakingSince(null);
   };
 
   return (
@@ -99,7 +147,14 @@ export default function HomePage() {
             </p>
           </div>
 
-          <ChatPanel messages={messages} loading={loading} onAsk={handleAsk} />
+          <ChatPanel
+            messages={messages}
+            loading={loading}
+            wakingSince={wakingSince}
+            onAsk={handleAsk}
+            onRetry={handleRetry}
+            onCancel={handleCancel}
+          />
         </section>
       </div>
     </main>

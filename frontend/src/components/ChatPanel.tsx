@@ -1,8 +1,16 @@
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Loader2 } from "lucide-react";
 import ChatBox from "./ChatBox";
 import AnswerCard from "./AnswerCard";
 import type { Message } from "@/types/chat";
 import { EXAMPLE_QUESTIONS } from "@/constants.ts/chat";
+import {
+  CANCEL_LABEL,
+  RETRY_BUTTON_LABEL,
+  WAKEUP_MESSAGE,
+  WAKEUP_SLOW_MESSAGE,
+  WAKEUP_SLOW_THRESHOLD_MS,
+} from "@/constants.ts/wakeup";
 
 const BOT_AVATAR_SRC = "/hyeyoon-avatar.png";
 
@@ -22,16 +30,77 @@ function BotBubble({ children }: { children: ReactNode }) {
   );
 }
 
+// 서버를 깨우며 재시도하는 동안 보여주는 말풍선
+function WakingBubble({
+  since,
+  onCancel,
+}: {
+  since: number;
+  onCancel: () => void;
+}) {
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const elapsedMs = Math.max(0, now - since);
+
+  return (
+    <BotBubble>
+      <div
+        role="status"
+        aria-live="polite"
+        className="max-w-full rounded-2xl rounded-tl-md px-4 py-3 text-sm leading-6"
+        style={{
+          border: "1px solid var(--color-card-border)",
+          background: "var(--color-card-bg)",
+          color: "var(--color-card-text)",
+        }}
+      >
+        <div className="flex items-start gap-2">
+          <Loader2
+            aria-hidden
+            className="mt-1 h-4 w-4 shrink-0 animate-spin text-(--color-primary)"
+          />
+          <span>
+            {elapsedMs >= WAKEUP_SLOW_THRESHOLD_MS
+              ? WAKEUP_SLOW_MESSAGE
+              : WAKEUP_MESSAGE}
+          </span>
+        </div>
+        <div className="mt-1 flex items-center gap-3 pl-6 text-xs text-(--color-text-muted)">
+          <span>{Math.floor(elapsedMs / 1000)}초 경과</span>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="underline underline-offset-2 transition hover:text-(--color-text)"
+          >
+            {CANCEL_LABEL}
+          </button>
+        </div>
+      </div>
+    </BotBubble>
+  );
+}
+
 interface ChatPanelProps {
   messages: Message[];
   loading: boolean;
+  wakingSince: number | null;
   onAsk: (question: string) => Promise<void>;
+  onRetry: (errorMessageId: number, question: string) => Promise<void>;
+  onCancel: () => void;
 }
 
 export default function ChatPanel({
   messages,
   loading,
+  wakingSince,
   onAsk,
+  onRetry,
+  onCancel,
 }: ChatPanelProps) {
   const listRef = useRef<HTMLDivElement | null>(null);
 
@@ -40,7 +109,7 @@ export default function ChatPanel({
     const list = listRef.current;
     if (!list) return;
     list.scrollTo({ top: list.scrollHeight, behavior: "smooth" });
-  }, [messages, loading]);
+  }, [messages, loading, wakingSince]);
 
   return (
     <div
@@ -87,6 +156,24 @@ export default function ChatPanel({
                     }}
                   >
                     {message.content}
+                    {message.retryQuestion && (
+                      <div className="mt-2">
+                        <button
+                          type="button"
+                          disabled={loading}
+                          onClick={() =>
+                            onRetry(message.id, message.retryQuestion!)
+                          }
+                          className="inline-flex min-h-8 items-center rounded-full px-3 text-xs font-medium transition enabled:hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50 pointer-coarse:min-h-11"
+                          style={{
+                            border: "1px solid var(--color-danger-border)",
+                            color: "var(--color-danger-text)",
+                          }}
+                        >
+                          {RETRY_BUTTON_LABEL}
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               );
@@ -112,7 +199,11 @@ export default function ChatPanel({
             );
           })}
 
-          {loading && (
+          {loading && wakingSince !== null && (
+            <WakingBubble since={wakingSince} onCancel={onCancel} />
+          )}
+
+          {loading && wakingSince === null && (
             <BotBubble>
               <div
                 role="status"
