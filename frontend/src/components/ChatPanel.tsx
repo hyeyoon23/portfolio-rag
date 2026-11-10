@@ -3,7 +3,7 @@ import { Loader2 } from "lucide-react";
 import ChatBox from "./ChatBox";
 import AnswerCard from "./AnswerCard";
 import type { Message } from "@/types/chat";
-import { EXAMPLE_QUESTIONS } from "@/constants.ts/chat";
+import { SUGGESTED_QUESTIONS } from "@/data/suggestedQuestions";
 import {
   CANCEL_LABEL,
   RETRY_BUTTON_LABEL,
@@ -89,7 +89,10 @@ interface ChatPanelProps {
   messages: Message[];
   loading: boolean;
   wakingSince: number | null;
+  // 추천 질문 칩 답변 전 "입력 중" 표시 여부
+  typing: boolean;
   onAsk: (question: string) => Promise<void>;
+  onSuggest: (id: string) => void;
   onRetry: (errorMessageId: number, question: string) => Promise<void>;
   onCancel: () => void;
 }
@@ -98,7 +101,9 @@ export default function ChatPanel({
   messages,
   loading,
   wakingSince,
+  typing,
   onAsk,
+  onSuggest,
   onRetry,
   onCancel,
 }: ChatPanelProps) {
@@ -109,7 +114,9 @@ export default function ChatPanel({
     const list = listRef.current;
     if (!list) return;
     list.scrollTo({ top: list.scrollHeight, behavior: "smooth" });
-  }, [messages, loading, wakingSince]);
+  }, [messages, loading, wakingSince, typing]);
+
+  const busy = loading || typing;
 
   return (
     <div
@@ -160,7 +167,7 @@ export default function ChatPanel({
                       <div className="mt-2">
                         <button
                           type="button"
-                          disabled={loading}
+                          disabled={busy}
                           onClick={() =>
                             onRetry(message.id, message.retryQuestion!)
                           }
@@ -203,7 +210,8 @@ export default function ChatPanel({
             <WakingBubble since={wakingSince} onCancel={onCancel} />
           )}
 
-          {loading && wakingSince === null && (
+          {/* 추천 질문 칩 답변 대기(typing)도 RAG 로딩과 같은 스켈레톤으로 보여준다. */}
+          {((loading && wakingSince === null) || typing) && (
             <BotBubble>
               <div
                 role="status"
@@ -236,13 +244,15 @@ export default function ChatPanel({
       >
         {/* 좁은 화면: 한 줄 가로 스크롤 / sm 이상: 줄바꿈 */}
         <div className="no-scrollbar flex gap-2 overflow-x-auto sm:flex-wrap sm:overflow-visible">
-          {EXAMPLE_QUESTIONS.map((item) => (
+          {SUGGESTED_QUESTIONS.map((item) => (
             <button
-              key={item}
-              onClick={() => onAsk(item)}
-              className="inline-flex shrink-0 items-center whitespace-nowrap rounded-full border border-(--color-chip-border) bg-(--color-chip-bg) px-3 py-1 text-sm text-(--color-chip-text) transition hover:border-(--color-chip-border-hover) hover:bg-(--color-chip-bg-hover) hover:text-(--color-chip-text-hover) pointer-coarse:min-h-11 sm:px-2 sm:text-[12px]"
+              key={item.id}
+              type="button"
+              disabled={busy}
+              onClick={() => onSuggest(item.id)}
+              className="inline-flex disabled:cursor-not-allowed disabled:opacity-50 shrink-0 items-center whitespace-nowrap rounded-full border border-(--color-chip-border) bg-(--color-chip-bg) px-3 py-1 text-sm text-(--color-chip-text) transition hover:border-(--color-chip-border-hover) hover:bg-(--color-chip-bg-hover) hover:text-(--color-chip-text-hover) pointer-coarse:min-h-11 sm:px-2 sm:text-[12px]"
             >
-              {item}
+              {item.question}
             </button>
           ))}
         </div>
@@ -253,7 +263,7 @@ export default function ChatPanel({
         className="shrink-0 px-3 py-3 sm:px-4"
         style={{ borderTop: "1px solid var(--color-border)" }}
       >
-        <ChatBox onSubmit={onAsk} loading={loading} />
+        <ChatBox onSubmit={onAsk} loading={busy} />
       </div>
     </div>
   );

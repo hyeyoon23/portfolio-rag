@@ -4,6 +4,11 @@ import { askRag, RagError } from "@/api/rag";
 import type { Message } from "@/types/chat";
 import ChatPanel from "@/components/ChatPanel";
 import ThemeToggleButton from "@/components/ThemeToggleButton";
+import {
+  SUGGESTED_QUESTIONS,
+  SUGGESTED_TYPING_DELAY_MAX_MS,
+  SUGGESTED_TYPING_DELAY_MIN_MS,
+} from "@/data/suggestedQuestions";
 
 export default function HomePage() {
   const [messages, setMessages] = useState<Message[]>([
@@ -20,8 +25,69 @@ export default function HomePage() {
   const [wakingSince, setWakingSince] = useState<number | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
-  // 페이지를 떠나면 진행 중인 요청/재시도를 취소
-  useEffect(() => () => abortRef.current?.abort(), []);
+  // 추천 질문 칩 답변 전 "입력 중" 표시 상태
+  const [typing, setTyping] = useState(false);
+  const typingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // 페이지를 떠나면 진행 중인 요청/재시도와 칩 답변 타이머를 취소
+  useEffect(
+    () => () => {
+      abortRef.current?.abort();
+      if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
+    },
+    [],
+  );
+
+  // 추천 질문 칩: API를 호출하지 않고 미리 저장한 답변을 보여준다.
+  const handleSuggest = (id: string) => {
+    // RAG 요청 중이거나 이전 칩 답변을 기다리는 중이면 무시해 말풍선 순서가 꼬이지 않게 한다.
+    if (loading || typing) return;
+
+    const suggestion = SUGGESTED_QUESTIONS.find((item) => item.id === id);
+    if (!suggestion) return;
+
+    const now = Date.now();
+    const userMessage: Message = {
+      id: now,
+      role: "user",
+      type: "text",
+      content: suggestion.question,
+    };
+    const answerMessage: Message = {
+      id: now + 1,
+      role: "assistant",
+      type: "answer",
+      content: suggestion.answer,
+    };
+
+    let reduceMotion = false;
+    try {
+      reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+    } catch {
+      // matchMedia를 쓸 수 없으면 기본 지연을 적용
+    }
+
+    if (reduceMotion) {
+      setMessages((prev) => [...prev, userMessage, answerMessage]);
+      return;
+    }
+
+    setMessages((prev) => [...prev, userMessage]);
+    setTyping(true);
+
+    const delay =
+      SUGGESTED_TYPING_DELAY_MIN_MS +
+      Math.random() *
+        (SUGGESTED_TYPING_DELAY_MAX_MS - SUGGESTED_TYPING_DELAY_MIN_MS);
+
+    typingTimerRef.current = setTimeout(() => {
+      typingTimerRef.current = null;
+      setMessages((prev) => [...prev, answerMessage]);
+      setTyping(false);
+    }, delay);
+  };
 
   const runQuery = async (question: string) => {
     abortRef.current?.abort();
@@ -80,7 +146,7 @@ export default function HomePage() {
 
   const handleAsk = async (question: string) => {
     const trimmed = question.trim();
-    if (!trimmed || loading) return;
+    if (!trimmed || loading || typing) return;
 
     const userMessage: Message = {
       id: Date.now(),
@@ -95,7 +161,7 @@ export default function HomePage() {
 
   // 오류 말풍선의 "다시 시도": 질문 말풍선은 그대로 두고 오류 말풍선만 걷어낸 뒤 재요청
   const handleRetry = async (errorMessageId: number, question: string) => {
-    if (loading) return;
+    if (loading || typing) return;
     setMessages((prev) => prev.filter((m) => m.id !== errorMessageId));
     await runQuery(question);
   };
@@ -151,7 +217,9 @@ export default function HomePage() {
             messages={messages}
             loading={loading}
             wakingSince={wakingSince}
+            typing={typing}
             onAsk={handleAsk}
+            onSuggest={handleSuggest}
             onRetry={handleRetry}
             onCancel={handleCancel}
           />
